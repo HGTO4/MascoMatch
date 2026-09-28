@@ -41,7 +41,7 @@ Este repositorio corresponde al desarrollo del proyecto ABP (Aprendizaje Basado 
 3. Escaneá el QR con **Expo Go** (el celular y la PC deben estar en la misma red WIFI) o presioná 'w' para abrir en el navegador.
 
 ## Estructura del proyecto
-
+```
 MascoMatch/
 ├─src/
 │ ├── app/ # Rutas (Expo Router)
@@ -75,7 +75,7 @@ MascoMatch/
 │ ├── use-theme.ts # De la plantilla — usado por los componentes Themed\*
 │ └── use-color-scheme.ts # De la plantilla — usado por use-theme
 ...
-
+```
 ## Sobre los archivos de la plantilla de Expo
 
 Este proyecto se generó con create-expo-app, que trae una base con soporte de tema claro/oscuro, splash screen animado y navegación web ya resueltos. Durante el desarrollo se eliminaron los archivos que eran solo contenido de demostración y no tenían ninguna dependencia real en el proyecto: collapsible.tsx, web-badge.tsx, hint-row.tsx, imágenes de ejemplo sin uso, y el script reset-project.js.
