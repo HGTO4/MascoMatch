@@ -13,11 +13,11 @@ Este repositorio corresponde al desarrollo del proyecto ABP (Aprendizaje Basado 
 ---
 ## Integrantes
 
-•Bruno, Franco Nicolás
-•Heredia, Nahuel Valentín
-•Lobera, Pastorino Mateo
-•Oviedo, Danilo
-•Torres Oliva, Héctor Gabriel
+- Bruno, Franco Nicolás
+- Heredia, Nahuel Valentín
+- Lobera, Pastorino Mateo
+- Oviedo, Danilo
+- Torres Oliva, Héctor Gabriel
 
 ---
 
