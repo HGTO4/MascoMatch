@@ -10,6 +10,7 @@ adopción en la zona del usuario, con información clara sobre cada animal (edad
 
 Este repositorio corresponde al desarrollo del proyecto ABP (Aprendizaje Basado en Proyectos), construido de forma incremental a lo largo de la cursada de Aplicaciones Móviles.
 
+---
 ## Integrantes
 
 •Bruno, Franco Nicolás
@@ -17,6 +18,8 @@ Este repositorio corresponde al desarrollo del proyecto ABP (Aprendizaje Basado 
 •Lobera, Pastorino Mateo
 •Oviedo, Danilo
 •Torres Oliva, Héctor Gabriel
+
+---
 
 ## Tecnologías
 
