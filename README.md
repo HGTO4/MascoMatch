@@ -23,6 +23,7 @@ Este repositorio corresponde al desarrollo del proyecto ABP (Aprendizaje Basado 
 - React Native
 - Expo + Expo Router
 - TypeScript
+- Zustand (estado global para favoritos)
 
 ## Cómo correr el proyecto
 
@@ -42,39 +43,43 @@ Este repositorio corresponde al desarrollo del proyecto ABP (Aprendizaje Basado 
 
 ## Estructura del proyecto
 
+```
 MascoMatch/
-├─src/
-│ ├── app/ # Rutas (Expo Router)
-│ │ ├── \_layout.tsx # Stack raíz de la navegación
-│ │ ├── (tabs)/ # Grupo de pestañas
-│ │ │ ├── \_layout.tsx
-│ │ │ ├── index.tsx # → Pantalla Inicio
-│ │ │ └── favorites.tsx # → Pantalla Favoritos
-│ │ └── pet/
-│ │ └── [id].tsx # Ruta dinámica: detalle de una mascota
-│ ├── components/
-│ │ ├── header.tsx # Propio — encabezado reutilizable
-│ │ ├── pet-card.tsx # Propio — tarjeta reutilizable de mascota
-│ │ ├── tag.tsx # Propio — etiqueta reutilizable (edad, tamaño, etc.)
-│ │ ├── app-tabs.tsx # Propio — navegación por pestañas (nativo)
-│ │ ├── app-tabs.web.tsx # Propio — navegación por pestañas (web)
-│ │ ├── animated-icon.tsx # De la plantilla — splash animado (en uso)
-│ │ ├── animated-icon.web.tsx # De la plantilla — splash animado, versión web
-│ │ ├── external-link.tsx # De la plantilla — usado en la barra de navegación web
-│ │ ├── themed-text.tsx # De la plantilla — soporte de tema claro/oscuro
-│ │ └── themed-view.tsx # De la plantilla — soporte de tema claro/oscuro
-│ ├── screens/
-│ │ ├── home-screen.tsx # Listado principal de mascotas
-│ │ ├── favorites-screen.tsx # Listado de mascotas favoritas
-│ │ └── pet-detail-screen.tsx # Detalle de una mascota
-│ ├── data/
-│ │ └── pets.ts # Datos estáticos tipados (interface Pet)
-│ ├── constants/
-│ │ └── theme.ts # Colores de marca (AppColors) + tema claro/oscuro
-│ └── hooks/
-│ ├── use-theme.ts # De la plantilla — usado por los componentes Themed\*
-│ └── use-color-scheme.ts # De la plantilla — usado por use-theme
+├─ src/
+│  ├── app/                      # Rutas (Expo Router)
+│  │  ├── _layout.tsx            # Stack raíz de la navegación
+│  │  ├── (tabs)/                # Grupo de pestañas
+│  │  │  ├── _layout.tsx
+│  │  │  ├── index.tsx           # → Pantalla Inicio
+│  │  │  └── favorites.tsx       # → Pantalla Favoritos
+│  │  └── pet/
+│  │     └── [id].tsx            # Ruta dinámica: detalle de una mascota
+│  ├── components/
+│  │  ├── header.tsx             # Propio — encabezado reutilizable
+│  │  ├── pet-card.tsx           # Propio — tarjeta reutilizable de mascota
+│  │  ├── tag.tsx                # Propio — etiqueta reutilizable (edad, tamaño, etc.)
+│  │  ├── app-tabs.tsx           # Propio — navegación por pestañas (nativo)
+│  │  ├── app-tabs.web.tsx       # Propio — navegación por pestañas (web)
+│  │  ├── animated-icon.tsx      # De la plantilla — splash animado (en uso)
+│  │  ├── animated-icon.web.tsx  # De la plantilla — splash animado, versión web
+│  │  ├── external-link.tsx      # De la plantilla — usado en la barra de navegación web
+│  │  ├── themed-text.tsx        # De la plantilla — soporte de tema claro/oscuro
+│  │  └── themed-view.tsx        # De la plantilla — soporte de tema claro/oscuro
+│  ├── screens/
+│  │  ├── home-screen.tsx        # Listado principal de mascotas
+│  │  ├── favorites-screen.tsx   # Listado de mascotas favoritas (filtrado con Zustand)
+│  │  └── pet-detail-screen.tsx  # Detalle de una mascota
+│  ├── store/
+│  │  └── favorites-store.ts     # Store Zustand: marcar/desmarcar favoritos
+│  ├── data/
+│  │  └── pets.ts                # Datos estáticos tipados (interface Pet)
+│  ├── constants/
+│  │  └── theme.ts               # Colores de marca (AppColors) + tema claro/oscuro
+│  └── hooks/
+│     ├── use-theme.ts           # De la plantilla — usado por los componentes Themed*
+│     └── use-color-scheme.ts    # De la plantilla — usado por use-theme
 ...
+```
 
 ## Sobre los archivos de la plantilla de Expo
 
@@ -97,6 +102,7 @@ Antes de borrar cada archivo se verificó, con búsqueda global en el proyecto, 
 - **Listas dinámicas**: .map() para renderizar listados y .filter() para el listado de favoritos.
 - **Navegación**: Expo Router con grupo de pestañas (tabs) y ruta dinámica pet/[id] para el detalle, usando router.navigate() y useLocalSearchParams().
 - **Búsqueda de un elemento**: .find() para localizar la mascota correspondiente al id recibido por parámetro.
+- **Estado global con Zustand**: `favorites-store.ts` centraliza qué mascotas están marcadas como favoritas (`favoriteIds`), con acciones `toggleFavorite` e `isFavorite`. Se consume con selectores (`useFavoritesStore((state) => state.favoriteIds)`) desde `PetCard`, `PetDetailScreen` y `FavoritesScreen`, sin pasar nada por props entre pantallas.
 
 ## Feature
 
@@ -105,10 +111,10 @@ Antes de borrar cada archivo se verificó, con búsqueda global en el proyecto, 
 | 1   | Consultar el listado de mascotas disponibles | ✅ Implementada |
 | 2   | Consultar el detalle de una mascota          | ✅ Implementada |
 | 3   | Consultar mascotas favoritas                 | ✅ Implementada |
-| 4   | Marcar/desmarcar una mascota como favorita   | ⏳ Pendiente    |
+| 4   | Marcar/desmarcar una mascota como favorita   | ✅ Implementada |
 | 5   | Filtrar mascotas por tipo y tamaño           | ⏳ Pendiente    |
 | 6   | Buscar una mascota por nombre                | ⏳ Pendiente    |
 | 7   | Solicitar la adopción de una mascota         | ⏳ Pendiente    |
 | 8   | Modo oscuro/claro en componentes propios     | ⏳ Pendiente    |
 
-> **Nota** esta no es la versión final del proyecto. Las features pendientes se irán incomporando a medida que se trabajen los próximos contenidos. Los datos son estáticos ('src/data/pets.ts') Las mascotas favoritas están definidas en los datos ('isFavorites'); el usuario todavía no puede modificarlas desde la app (feature #4).
+> **Nota** esta no es la versión final del proyecto. Las features pendientes se irán incomporando a medida que se trabajen los próximos contenidos. Los datos son estáticos ('src/data/pets.ts') El estado de "favorito" de cada una **sí es dinámico**: se maneja con un store de Zustand (`src/store/favorites-store.ts`) y se sincroniza automáticamente entre la pantalla de Inicio, Favoritos y el Detalle.

@@ -1,13 +1,15 @@
 import { Header } from "@/components/header";
 import { PetCard } from "@/components/pet-card";
-import { Spacing } from "@/constants/theme";
+import { AppColors, Spacing } from "@/constants/theme";
 import { pets } from "@/data/pets";
+import { useFavoritesStore } from "@/store/favorites-store";
 import { useRouter } from "expo-router";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 export function FavoritesScreen() {
-  const favoritePets = pets.filter((pet) => pet.isFavorite);
   const router = useRouter();
+  const favoriteIds = useFavoritesStore((state) => state.favoriteIds);
+  const favoritePets = pets.filter((pet) => favoriteIds.includes(pet.id));
 
   return (
     <View style={styles.container}>
@@ -21,18 +23,31 @@ export function FavoritesScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.content}>
-          {favoritePets.map((pet) => (
-            <PetCard
-              key={pet.id}
-              pet={pet}
-              onPress={() =>
-                router.navigate({
-                  pathname: "/pet/[id]",
-                  params: { id: pet.id },
-                })
-              }
-            />
-          ))}
+          {favoritePets.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyEmoji}>💙</Text>
+              <Text style={styles.emptyTitle}>
+                Todavía no tenes Mascotas Favoritas
+              </Text>
+              <Text style={styles.emptyText}>
+                Tocá en el corazón de una mascota para guardarla como tu
+                favorita
+              </Text>
+            </View>
+          ) : (
+            favoritePets.map((pet) => (
+              <PetCard
+                key={pet.id}
+                pet={pet}
+                onPress={() =>
+                  router.navigate({
+                    pathname: "/pet/[id]",
+                    params: { id: pet.id },
+                  })
+                }
+              />
+            ))
+          )}
         </View>
       </ScrollView>
     </View>
@@ -56,5 +71,25 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     paddingHorizontal: Spacing.three,
     paddingTop: Spacing.three,
+  },
+  emptyState: {
+    alignItems: "center",
+    paddingVertical: 60,
+    paddingHorizontal: 20,
+  },
+  emptyEmoji: {
+    fontSize: 48,
+    marginBottom: 12,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: AppColors.text,
+    marginBottom: 6,
+  },
+  emptyText: {
+    fontSize: 14,
+    color: AppColors.textSecondary,
+    textAlign: "center",
   },
 });

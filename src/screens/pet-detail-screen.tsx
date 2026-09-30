@@ -1,21 +1,26 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { Header } from "@/components/header";
 import { Tag } from "@/components/tag";
 import { AppColors, Spacing } from "@/constants/theme";
 import { pets } from "@/data/pets";
+import { useFavoritesStore } from "@/store/favorites-store";
 
 export function PetDetailScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+  const isFav = useFavoritesStore((state) =>
+    state.favoriteIds.includes(id as string),
+  );
+  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
 
   const pet = pets.find((p) => p.id === id);
 
@@ -47,6 +52,14 @@ export function PetDetailScreen() {
                 style={styles.image}
                 resizeMode="cover"
               />
+
+              <TouchableOpacity
+                style={styles.favoriteButton}
+                onPress={() => toggleFavorite(pet.id)}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.favoriteIcon}>{isFav ? "❤️" : "🤍"}</Text>
+              </TouchableOpacity>
 
               <View style={styles.info}>
                 <Text style={styles.name}>{pet.name}</Text>
@@ -107,7 +120,6 @@ const styles = StyleSheet.create({
   cardShadow: {
     marginBottom: Spacing.three,
     marginVertical: Spacing.three,
-    shadowColor: "#000",
     borderRadius: 22,
     boxShadow: "0px 5px 14px rgba(31, 41, 55, 0.08)",
     elevation: 3,
@@ -174,5 +186,19 @@ const styles = StyleSheet.create({
   notFoundText: {
     fontSize: Spacing.three,
     color: AppColors.textSecondary,
+  },
+  favoriteButton: {
+    position: "absolute",
+    top: 14,
+    right: 14,
+    width: 40,
+    height: 40,
+    borderRadius: Spacing.four,
+    backgroundColor: "rgba(255,255,255,0.9)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  favoriteIcon: {
+    fontSize: 20,
   },
 });

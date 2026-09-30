@@ -1,6 +1,7 @@
 import { Tag } from "@/components/tag";
-import { AppColors } from "@/constants/theme";
+import { AppColors, Spacing } from "@/constants/theme";
 import { Pet } from "@/data/pets";
+import { useFavoritesStore } from "@/store/favorites-store";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface PetCardProps {
@@ -9,6 +10,11 @@ interface PetCardProps {
 }
 
 export function PetCard({ pet, onPress }: PetCardProps) {
+  const isFav = useFavoritesStore((state) =>
+    state.favoriteIds.includes(pet.id),
+  );
+  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
+
   return (
     <TouchableOpacity
       style={styles.cardShadow}
@@ -26,6 +32,17 @@ export function PetCard({ pet, onPress }: PetCardProps) {
           <View style={styles.typeBadge}>
             <Text style={styles.typeBadgeText}>{pet.type}</Text>
           </View>
+
+          <TouchableOpacity
+            style={styles.favoriteButton}
+            onPress={(e) => {
+              e.stopPropagation();
+              toggleFavorite(pet.id);
+            }}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.favoriteIcon}>{isFav ? "❤️" : "🤍"}</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.info}>
@@ -110,5 +127,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 21,
     color: AppColors.textSecondary,
+  },
+  favoriteButton: {
+    position: "absolute",
+    top: 14,
+    right: 14,
+    width: 40,
+    height: 40,
+    borderRadius: Spacing.four,
+    backgroundColor: "rgba(255,255,255,0.9)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  favoriteIcon: {
+    fontSize: 20,
   },
 });
