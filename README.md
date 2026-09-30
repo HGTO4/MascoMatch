@@ -82,7 +82,6 @@ MascoMatch/
 │  └── hooks/
 │     ├── use-theme.ts           # De la plantilla — usado por los componentes Themed*
 │     └── use-color-scheme.ts    # De la plantilla — usado por use-theme
-...
 ```
 
 ## Sobre los archivos de la plantilla de Expo
@@ -108,9 +107,9 @@ Antes de borrar cada archivo se verificó, con búsqueda global en el proyecto, 
 - **Búsqueda de un elemento**: .find() para localizar la mascota correspondiente al id recibido por parámetro.
 - **Estado global con Zustand**: `favorites-store.ts` centraliza qué mascotas están marcadas como favoritas (`favoriteIds`), con acciones `toggleFavorite` e `isFavorite`. Se consume con selectores (`useFavoritesStore((state) => state.favoriteIds)`) desde `PetCard`, `PetDetailScreen` y `FavoritesScreen`, sin pasar nada por props entre pantallas.
 
-## Feature
+## Features
 
-| #   | Feature                                      | Estado          |
+| #   | Features                                     | Estado          |
 | --- | -------------------------------------------- | --------------- |
 | 1   | Consultar el listado de mascotas disponibles | ✅ Implementada |
 | 2   | Consultar el detalle de una mascota          | ✅ Implementada |
@@ -121,4 +120,4 @@ Antes de borrar cada archivo se verificó, con búsqueda global en el proyecto, 
 | 7   | Solicitar la adopción de una mascota         | ⏳ Pendiente    |
 | 8   | Modo oscuro/claro en componentes propios     | ⏳ Pendiente    |
 
-> **Nota** esta no es la versión final del proyecto. Las features pendientes se irán incomporando a medida que se trabajen los próximos contenidos. Los datos son estáticos ('src/data/pets.ts') El estado de "favorito" de cada una **sí es dinámico**: se maneja con un store de Zustand (`src/store/favorites-store.ts`) y se sincroniza automáticamente entre la pantalla de Inicio, Favoritos y el Detalle.
+> **Nota** esta no es la versión final del proyecto. Las features pendientes se irán incorporando a medida que se trabajen los próximos contenidos. Los datos son estáticos ('src/data/pets.ts') El estado de "favorito" de cada una **sí es dinámico**: se maneja con un store de Zustand (`src/store/favorites-store.ts`) y se sincroniza automáticamente entre la pantalla de Inicio, Favoritos y el Detalle.
