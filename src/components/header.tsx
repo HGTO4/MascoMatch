@@ -1,4 +1,5 @@
 import { AppColors, Spacing } from "@/constants/theme";
+import { useLayout } from "@/hooks/use-layout";
 import { StyleSheet, Text, View } from "react-native";
 
 interface HeaderProps {
@@ -7,9 +8,11 @@ interface HeaderProps {
 }
 
 export function Header({ title, subtitle }: HeaderProps) {
+  const { margenX } = useLayout();
+
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
+      <View style={[styles.content, { paddingHorizontal: margenX }]}>
         <View style={styles.brandRow}>
           <View style={styles.logo}>
             <Text style={styles.logoText}>🐾</Text>
@@ -34,9 +37,6 @@ const styles = StyleSheet.create({
   },
   content: {
     width: "100%",
-    maxWidth: 1100,
-    alignSelf: "center",
-    paddingHorizontal: Spacing.four,
     paddingTop: Spacing.seven,
     paddingBottom: 28,
   },

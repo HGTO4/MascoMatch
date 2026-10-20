@@ -100,7 +100,7 @@ export function PetDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F6F8FB",
+    backgroundColor: AppColors.background,
   },
   scrollContent: {
     paddingBottom: Spacing.six,
