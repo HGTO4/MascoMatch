@@ -28,6 +28,7 @@ Este repositorio corresponde al desarrollo del proyecto ABP (Aprendizaje Basado 
 - Expo + Expo Router
 - TypeScript
 - Zustand (estado global para favoritos)
+- Jest + React Testing Library (tests de funciones y de componentes)
 
 ## Cómo correr el proyecto
 
@@ -45,6 +46,25 @@ Este repositorio corresponde al desarrollo del proyecto ABP (Aprendizaje Basado 
 
 3. Escaneá el QR con **Expo Go** (el celular y la PC deben estar en la misma red WIFI) o presioná 'w' para abrir en el navegador.
 
+## Tests
+
+El proyecto usa **Jest** (con el preset `jest-expo`) y **React Testing Library** para React Native.
+
+```bash
+npm test
+```
+
+Qué se prueba actualmente:
+
+- **`filtrarMascotas`** (`src/utils/__tests__/pet-search.test.ts`): función pura que combina nombre, tipo y tamaño. Cubre cada filtro por separado, la combinación de los tres, mayúsculas/minúsculas, espacios al final del texto y búsquedas sin resultados.
+- **`FiltersPanel`** (`src/components/__tests__/filters-panel.test.tsx`): muestra las opciones de filtro, avisa qué chip se tocó y muestra el botón "Limpiar filtros" solo cuando hay filtros activos.
+
+Detalles de configuración:
+
+- En `package.json`, la clave `jest` define el preset y un `moduleNameMapper` que resuelve el alias `@/` hacia `src/`.
+- Los archivos `.css` (importados por `constants/theme.ts`) se reemplazan en Jest por `src/__mocks__/style-mock.js`, porque Jest no sabe leerlos.
+- En `tsconfig.json`, `"types": ["jest"]` hace que el editor reconozca `describe`, `it` y `expect` (TypeScript 6 ya no carga los tipos de `@types` automáticamente).
+
 ## Estructura del proyecto
 
 ```
@@ -59,6 +79,8 @@ MascoMatch/
 │  │  └── pet/
 │  │     └── [id].tsx            # Ruta dinámica: detalle de una mascota
 │  ├── components/
+│  │  ├── __tests__/
+│  │  │  └── filters-panel.test.tsx  # Tests del panel de filtros
 │  │  ├── header.tsx             # Propio — encabezado reutilizable
 │  │  ├── pet-card.tsx           # Propio — tarjeta reutilizable de mascota
 │  │  ├── tag.tsx                # Propio — etiqueta reutilizable (edad, tamaño, etc.)
@@ -80,7 +102,11 @@ MascoMatch/
 │  ├── data/
 │  │  └── pets.ts                # Datos estáticos tipados (interface Pet)
 │  ├── utils/
-│  │  └── pet-search.ts          # Funciones puras: filtrarMascotas y buscarPorNombre
+│  │  ├── pet-search.ts          # Funciones puras: filtrarMascotas y buscarPorNombre
+│  │  └── __tests__/
+│  │     └── pet-search.test.ts  # Tests de filtrarMascotas
+│  ├── __mocks__/
+│  │  └── style-mock.js          # Reemplazo de archivos .css para Jest
 │  ├── constants/
 │  │  └── theme.ts               # Colores de marca (AppColors) + tema claro/oscuro
 │  └── hooks/
@@ -115,6 +141,7 @@ Antes de borrar cada archivo se verificó, con búsqueda global en el proyecto, 
 - **Navegación**: Expo Router con grupo de pestañas (tabs) y ruta dinámica pet/[id] para el detalle, usando router.navigate() y useLocalSearchParams().
 - **Búsqueda de un elemento**: .find() para localizar la mascota correspondiente al id recibido por parámetro.
 - **Estado global con Zustand**: `favorites-store.ts` centraliza qué mascotas están marcadas como favoritas (`favoriteIds`), con acciones `toggleFavorite` e `isFavorite`. Se consume con selectores (`useFavoritesStore((state) => state.favoriteIds)`) desde `PetCard`, `PetDetailScreen` y `FavoritesScreen`, sin pasar nada por props entre pantallas.
+- **Testing**: tests unitarios de funciones puras y tests de componentes con interacción (`render`, `fireEvent`), siguiendo el patrón AAA (Arrange, Act, Assert). Se usan funciones espía (`jest.fn()`) para verificar que un componente avisa a su padre por props, y `queryByText` / `getByText` según se quiera comprobar la ausencia o la presencia de un elemento.
 
 ## Features
 
