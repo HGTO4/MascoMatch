@@ -58,6 +58,8 @@ Qué se prueba actualmente:
 
 - **`filtrarMascotas`** (`src/utils/__tests__/pet-search.test.ts`): función pura que combina nombre, tipo y tamaño. Cubre cada filtro por separado, la combinación de los tres, mayúsculas/minúsculas, espacios al final del texto y búsquedas sin resultados.
 - **`FiltersPanel`** (`src/components/__tests__/filters-panel.test.tsx`): muestra las opciones de filtro, avisa qué chip se tocó y muestra el botón "Limpiar filtros" solo cuando hay filtros activos.
+- **`validarSolicitud` y `esSolicitudValida`** (`src/utils/__tests__/adoption.test.ts`): reglas de validación del formulario de adopción (nombre, email, mensaje y teléfono opcional). Los errores se acumulan por campo.
+- **`AdoptionScreen`** (`src/screens/__tests__/adoption-screen.test.tsx`): muestra los errores al enviar vacío, la confirmación con datos válidos y la navegación de los botones. Usa `jest.mock("expo-router")` para simular la navegación, y `beforeEach` para limpiar las funciones espía entre tests.
 
 Detalles de configuración:
 
@@ -71,6 +73,8 @@ Detalles de configuración:
 MascoMatch/
 ├─ src/
 │  ├── app/                      # Rutas (Expo Router)
+│  │  ├── adopt/
+│  │  │  └── [id].tsx            # Ruta dinámica: formulario de adopción de una mascota
 │  │  ├── _layout.tsx            # Stack raíz de la navegación
 │  │  ├── (tabs)/                # Grupo de pestañas
 │  │  │  ├── _layout.tsx
@@ -86,6 +90,7 @@ MascoMatch/
 │  │  ├── tag.tsx                # Propio — etiqueta reutilizable (edad, tamaño, etc.)
 │  │  ├── chip.tsx               # Propio — botón en forma de píldora para las opciones de filtro
 │  │  ├── filters-panel.tsx      # Propio — buscador + filtros por tipo y tamaño + botón de limpiar
+│  │  ├── form-field.tsx         # Propio — campo de formulario con etiqueta y mensaje de error
 │  │  ├── app-tabs.tsx           # Propio — navegación por pestañas (nativo)
 │  │  ├── app-tabs.web.tsx       # Propio — navegación por pestañas (web)
 │  │  ├── animated-icon.tsx      # De la plantilla — splash animado (en uso)
@@ -96,15 +101,21 @@ MascoMatch/
 │  ├── screens/
 │  │  ├── home-screen.tsx        # Listado principal en grilla, con buscador y filtros
 │  │  ├── favorites-screen.tsx   # Listado de mascotas favoritas (filtrado con Zustand)
-│  │  └── pet-detail-screen.tsx  # Detalle de una mascota
+│  │  ├── pet-detail-screen.tsx  # Detalle de una mascota, con acceso a la solicitud de adopción
+│  │  ├── adoption-screen.tsx    # Formulario de solicitud de adopción y pantalla de confirmación
+│  │  ├── pet-detail-screen.tsx  # Detalle de una mascota, con acceso a la solicitud de adopción
+│  │  └── __tests__/
+│  │     └── adoption-screen.test.tsx  # Tests del formulario de adopción
 │  ├── store/
 │  │  └── favorites-store.ts     # Store Zustand: marcar/desmarcar favoritos
 │  ├── data/
 │  │  └── pets.ts                # Datos estáticos tipados (interface Pet)
 │  ├── utils/
 │  │  ├── pet-search.ts          # Funciones puras: filtrarMascotas y buscarPorNombre
+│  │  ├── adoption.ts            # Funciones puras: validarSolicitud y esSolicitudValida
 │  │  └── __tests__/
-│  │     └── pet-search.test.ts  # Tests de filtrarMascotas
+│  │     ├── pet-search.test.ts  # Tests de filtrarMascotas
+│  │     └── adoption.test.ts    # Tests de validarSolicitud y esSolicitudValida
 │  ├── __mocks__/
 │  │  └── style-mock.js          # Reemplazo de archivos .css para Jest
 │  ├── constants/
@@ -131,17 +142,19 @@ Antes de borrar cada archivo se verificó, con búsqueda global en el proyecto, 
 ## Conceptos aplicados
 
 - **Componentes reutilizables y props**: Tag, Header, Chip, FiltersPanel y PetCard reciben sus datos exclusivamente por props; PetCard es el componente central que representa un elemento de la app (cumpliendo lo solicitado en la consigna, análogo a un MovieCard).
-- **View, Text, Image, ScrollView**: usados en PetCard, FavoritesScreen y PetDetailScreen.
+- **View, Text, Image, ScrollView**: usados en PetCard, FavoritesScreen, AdoptionScreen y PetDetailScreen.
 - **Datos estáticos tipados**: src/data/pets.ts, con una interface Pet que define la forma de cada mascota.
 - **Listas dinámicas**: .map() para renderizar los chips de filtro y el listado de favoritos, y .filter() para los favoritos y para el buscador.
 - **FlatList con grilla**: HomeScreen usa `FlatList` con `numColumns` (1, 2 o 3 columnas según el ancho de pantalla) y `ListEmptyComponent` para mostrar un mensaje cuando ninguna mascota coincide con los filtros.
 - **Diseño responsive**: el hook `useLayout` usa `useWindowDimensions` para decidir cuántas columnas mostrar y qué márgenes aplicar. En pantallas anchas (web) los filtros pasan a una barra lateral; en el celular quedan arriba de la lista.
 - **Estado local con `useState`**: HomeScreen guarda el texto de búsqueda y los filtros de tipo y tamaño, y se los pasa a `FiltersPanel` por props (_lifting state up_). Los inputs son controlados (`value` + `onChangeText`).
 - **Funciones puras**: `filtrarMascotas` (src/utils/pet-search.ts) combina nombre, tipo y tamaño en una sola función, separada de la pantalla para poder testearla de forma aislada.
-- **Navegación**: Expo Router con grupo de pestañas (tabs) y ruta dinámica pet/[id] para el detalle, usando router.navigate() y useLocalSearchParams().
+- **Navegación**: Expo Router con grupo de pestañas (tabs) y ruta dinámica pet/[id] para el detalle y adopt[id] para el formulario de adopción, usando router.navigate() y useLocalSearchParams().
 - **Búsqueda de un elemento**: .find() para localizar la mascota correspondiente al id recibido por parámetro.
 - **Estado global con Zustand**: `favorites-store.ts` centraliza qué mascotas están marcadas como favoritas (`favoriteIds`), con acciones `toggleFavorite` e `isFavorite`. Se consume con selectores (`useFavoritesStore((state) => state.favoriteIds)`) desde `PetCard`, `PetDetailScreen` y `FavoritesScreen`, sin pasar nada por props entre pantallas.
 - **Testing**: tests unitarios de funciones puras y tests de componentes con interacción (`render`, `fireEvent`), siguiendo el patrón AAA (Arrange, Act, Assert). Se usan funciones espía (`jest.fn()`) para verificar que un componente avisa a su padre por props, y `queryByText` / `getByText` según se quiera comprobar la ausencia o la presencia de un elemento.
+- **Formularios controlados y validación**: `AdoptionScreen` guarda cada campo con `useState` y valida con una función pura (`validarSolicitud`) que devuelve un objeto de errores por campo. El componente reutilizable `FormField` muestra la etiqueta, el input y el mensaje de error.
+- **Mocks en tests**: se reemplazan `useRouter` y `useLocalSearchParams` de Expo Router por versiones simuladas para probar la pantalla de forma aislada.
 
 ## Features
 
@@ -153,7 +166,8 @@ Antes de borrar cada archivo se verificó, con búsqueda global en el proyecto, 
 | 4   | Marcar/desmarcar una mascota como favorita   | ✅ Implementada |
 | 5   | Filtrar mascotas por tipo y tamaño           | ✅ Implementada |
 | 6   | Buscar una mascota por nombre                | ✅ Implementada |
-| 7   | Solicitar la adopción de una mascota         | ⏳ Pendiente    |
+| 7   | Solicitar la adopción de una mascota         | ✅ Implementada |
 | 8   | Modo oscuro/claro en componentes propios     | ⏳ Pendiente    |
 
 > **Nota** esta no es la versión final del proyecto. Las features pendientes se irán incorporando a medida que se trabajen los próximos contenidos. Los datos son estáticos (`src/data/pets.ts`). El estado de "favorito" de cada mascota **sí es dinámico**: se maneja con un store de Zustand (`src/store/favorites-store.ts`) y se sincroniza automáticamente entre la pantalla de Inicio, Favoritos y el Detalle. La búsqueda y los filtros también son dinámicos, pero su estado es local a la pantalla de Inicio.
+> La solicitud de adopción es simulada: valida los datos y muestra una confirmación, pero no se envía a ningún servidor.

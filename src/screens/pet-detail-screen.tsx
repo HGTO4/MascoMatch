@@ -81,13 +81,30 @@ export function PetDetailScreen() {
 
                 <Text style={styles.description}>{pet.description}</Text>
 
-                <TouchableOpacity
-                  style={styles.backButton}
-                  onPress={() => router.back()}
-                  activeOpacity={0.85}
-                >
-                  <Text style={styles.backButtonText}>Volver a Mascotas</Text>
-                </TouchableOpacity>
+                <View style={styles.actions}>
+                  <TouchableOpacity
+                    style={styles.adoptButton}
+                    onPress={() =>
+                      router.navigate({
+                        pathname: "/adopt/[id]",
+                        params: { id: pet.id },
+                      })
+                    }
+                    activeOpacity={0.85}
+                  >
+                    <Text style={styles.adoptButtonText}>
+                      Solicitar adopción
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.backButton}
+                    onPress={() => router.back()}
+                    activeOpacity={0.85}
+                  >
+                    <Text style={styles.backButtonText}>Volver</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </View>
@@ -166,16 +183,18 @@ const styles = StyleSheet.create({
     color: AppColors.textSecondary,
   },
   backButton: {
-    backgroundColor: AppColors.primary,
-    paddingVertical: 15,
-    borderRadius: Spacing.three,
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: AppColors.primary,
+    backgroundColor: AppColors.surface,
     alignItems: "center",
-    marginTop: Spacing.five,
   },
   backButtonText: {
-    color: "#FFFFFF",
-    fontWeight: "800",
-    fontSize: 15,
+    fontSize: 16,
+    fontWeight: "700",
+    color: AppColors.primary,
   },
   notFound: {
     flex: 1,
@@ -200,5 +219,22 @@ const styles = StyleSheet.create({
   },
   favoriteIcon: {
     fontSize: 20,
+  },
+  adoptButton: {
+    flex: 2,
+    paddingVertical: 14,
+    borderRadius: 14,
+    backgroundColor: AppColors.primary,
+    alignItems: "center",
+  },
+  adoptButtonText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: AppColors.surface,
+  },
+  actions: {
+    flexDirection: "row",
+    gap: Spacing.two,
+    marginTop: Spacing.four,
   },
 });
