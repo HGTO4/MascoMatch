@@ -1,16 +1,20 @@
 import { FiltersPanel } from "@/components/filters-panel";
 import { Header } from "@/components/header";
 import { PetCard } from "@/components/pet-card";
-import { AppColors, Spacing } from "@/constants/theme";
-import { pets } from "@/data/pets";
+import { AppPalette, Spacing } from "@/constants/theme";
+import { useAppColors } from "@/hooks/use-app-colors";
 import { useLayout } from "@/hooks/use-layout";
+import { usePetsStore } from "@/store/pets-store";
 import { filtrarMascotas } from "@/utils/pet-search";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 
 export function HomeScreen() {
+  const colors = useAppColors();
+  const styles = createStyles(colors);
   const router = useRouter();
+  const pets = usePetsStore((state) => state.pets);
   const [busqueda, setBusqueda] = useState("");
   const [tipo, setTipo] = useState("Todos");
   const [tamano, setTamano] = useState("Todos");
@@ -48,6 +52,8 @@ export function HomeScreen() {
             onTamanoChange={setTamano}
             onLimpiar={limpiarFiltros}
             hayFiltros={hayFiltros}
+            compacto={!esAncho}
+            resultados={mascotasFiltradas.length}
           />
         </View>
 
@@ -82,56 +88,60 @@ export function HomeScreen() {
           numColumns={columnas}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
         />
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: AppColors.background,
-  },
-  scroll: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingBottom: Spacing.six,
-    paddingTop: Spacing.three,
-  },
-  body: {
-    flex: 1,
-    width: "100%",
-  },
-  bodyAncho: {
-    flexDirection: "row",
-  },
-  sidebar: {
-    width: 260,
-  },
-  filtrosArriba: {
-    paddingBottom: Spacing.two,
-  },
-  celda: {
-    flex: 1,
-    paddingHorizontal: Spacing.two,
-  },
-  vacio: {
-    alignItems: "center",
-    paddingVertical: Spacing.seven,
-    paddingHorizontal: Spacing.four,
-  },
-  vacioTitulo: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: AppColors.text,
-    textAlign: "center",
-  },
-  vacioTexto: {
-    marginTop: Spacing.two,
-    fontSize: 14,
-    color: AppColors.textSecondary,
-    textAlign: "center",
-  },
-});
+function createStyles(colors: AppPalette) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    scroll: {
+      flex: 1,
+    },
+    scrollContent: {
+      paddingBottom: Spacing.six,
+      paddingTop: Spacing.three,
+    },
+    body: {
+      flex: 1,
+      width: "100%",
+    },
+    bodyAncho: {
+      flexDirection: "row",
+    },
+    sidebar: {
+      width: 260,
+    },
+    filtrosArriba: {
+      paddingBottom: Spacing.two,
+    },
+    celda: {
+      flex: 1,
+      paddingHorizontal: Spacing.two,
+    },
+    vacio: {
+      alignItems: "center",
+      paddingVertical: Spacing.seven,
+      paddingHorizontal: Spacing.four,
+    },
+    vacioTitulo: {
+      fontSize: 18,
+      fontWeight: "700",
+      color: colors.text,
+      textAlign: "center",
+    },
+    vacioTexto: {
+      marginTop: Spacing.two,
+      fontSize: 14,
+      color: colors.textSecondary,
+      textAlign: "center",
+    },
+  });
+}

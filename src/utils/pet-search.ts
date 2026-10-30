@@ -18,8 +18,3 @@ export function filtrarMascotas(pets: Pet[], filtros: Filtros): Pet[] {
     return coincideNombre && coincideTipo && coincideTamano;
   });
 }
-
-export function buscarPorNombre(pets: Pet[], texto: string): Pet[] {
-  const buscando = texto.trim().toLowerCase();
-  return pets.filter((pet) => pet.name.toLowerCase().includes(buscando));
-}

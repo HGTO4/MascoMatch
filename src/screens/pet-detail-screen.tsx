@@ -10,11 +10,15 @@ import {
 
 import { Header } from "@/components/header";
 import { Tag } from "@/components/tag";
-import { AppColors, Spacing } from "@/constants/theme";
-import { pets } from "@/data/pets";
+import { AppPalette, Spacing } from "@/constants/theme";
+import { useAppColors } from "@/hooks/use-app-colors";
 import { useFavoritesStore } from "@/store/favorites-store";
+import { usePetsStore } from "@/store/pets-store";
 
 export function PetDetailScreen() {
+  const colors = useAppColors();
+  const styles = createStyles(colors);
+  const pets = usePetsStore((state) => state.pets);
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const isFav = useFavoritesStore((state) =>
@@ -69,8 +73,8 @@ export function PetDetailScreen() {
 
                 <View style={styles.tagsRow}>
                   <Tag label={pet.age} />
-                  <Tag label={pet.size} color={AppColors.primary} />
-                  <Tag label={pet.type} color={AppColors.secondary} />
+                  <Tag label={pet.size} color={colors.primary} />
+                  <Tag label={pet.type} color={colors.secondary} />
                   <Tag label={pet.breed} />
                   <Tag label={pet.sex} />
                 </View>
@@ -114,127 +118,129 @@ export function PetDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: AppColors.background,
-  },
-  scrollContent: {
-    paddingBottom: Spacing.six,
-  },
-  content: {
-    width: "100%",
-    maxWidth: 900,
-    alignSelf: "center",
-    paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.three,
-  },
-  card: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 22,
-    overflow: "hidden",
-  },
-  cardShadow: {
-    marginBottom: Spacing.three,
-    marginVertical: Spacing.three,
-    borderRadius: 22,
-    boxShadow: "0px 5px 14px rgba(31, 41, 55, 0.08)",
-    elevation: 3,
-  },
-  info: {
-    padding: Spacing.four,
-  },
-  name: {
-    fontSize: 30,
-    lineHeight: 36,
-    fontWeight: "800",
-    color: AppColors.text,
-  },
-  subtitle: {
-    marginTop: Spacing.one,
-    fontSize: 14,
-    lineHeight: Spacing.four,
-    color: AppColors.textSecondary,
-  },
-  image: {
-    width: "100%",
-    height: 380,
-  },
-  tagsRow: {
-    marginTop: Spacing.three,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    rowGap: 7,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: "#E8EDF2",
-    marginVertical: 7,
-  },
-  descriptionTitle: {
-    fontSize: 17,
-    fontWeight: "800",
-    color: AppColors.text,
-    marginBottom: 7,
-  },
-  description: {
-    fontSize: 15,
-    lineHeight: 24,
-    color: AppColors.textSecondary,
-  },
-  backButton: {
-    flex: 1,
-    paddingVertical: 14,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: AppColors.primary,
-    backgroundColor: AppColors.surface,
-    alignItems: "center",
-  },
-  backButtonText: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: AppColors.primary,
-  },
-  notFound: {
-    flex: 1,
-    justifyContent: "center",
-    alignContent: "center",
-    padding: Spacing.four,
-  },
-  notFoundText: {
-    fontSize: Spacing.three,
-    color: AppColors.textSecondary,
-  },
-  favoriteButton: {
-    position: "absolute",
-    top: 14,
-    right: 14,
-    width: 40,
-    height: 40,
-    borderRadius: Spacing.four,
-    backgroundColor: "rgba(255,255,255,0.9)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  favoriteIcon: {
-    fontSize: 20,
-  },
-  adoptButton: {
-    flex: 2,
-    paddingVertical: 14,
-    borderRadius: 14,
-    backgroundColor: AppColors.primary,
-    alignItems: "center",
-  },
-  adoptButtonText: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: AppColors.surface,
-  },
-  actions: {
-    flexDirection: "row",
-    gap: Spacing.two,
-    marginTop: Spacing.four,
-  },
-});
+function createStyles(colors: AppPalette) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    scrollContent: {
+      paddingBottom: Spacing.six,
+    },
+    content: {
+      width: "100%",
+      maxWidth: 900,
+      alignSelf: "center",
+      paddingHorizontal: Spacing.three,
+      paddingTop: Spacing.three,
+    },
+    card: {
+      backgroundColor: colors.surface,
+      borderRadius: 22,
+      overflow: "hidden",
+    },
+    cardShadow: {
+      marginBottom: Spacing.three,
+      marginVertical: Spacing.three,
+      borderRadius: 22,
+      boxShadow: "0px 5px 14px rgba(31, 41, 55, 0.08)",
+      elevation: 3,
+    },
+    info: {
+      padding: Spacing.four,
+    },
+    name: {
+      fontSize: 30,
+      lineHeight: 36,
+      fontWeight: "800",
+      color: colors.text,
+    },
+    subtitle: {
+      marginTop: Spacing.one,
+      fontSize: 14,
+      lineHeight: Spacing.four,
+      color: colors.textSecondary,
+    },
+    image: {
+      width: "100%",
+      height: 380,
+    },
+    tagsRow: {
+      marginTop: Spacing.three,
+      flexDirection: "row",
+      flexWrap: "wrap",
+      rowGap: 7,
+    },
+    divider: {
+      height: 1,
+      backgroundColor: colors.border,
+      marginVertical: 7,
+    },
+    descriptionTitle: {
+      fontSize: 17,
+      fontWeight: "800",
+      color: colors.text,
+      marginBottom: 7,
+    },
+    description: {
+      fontSize: 15,
+      lineHeight: 24,
+      color: colors.textSecondary,
+    },
+    backButton: {
+      flex: 1,
+      paddingVertical: 14,
+      borderRadius: 14,
+      borderWidth: 1,
+      borderColor: colors.primary,
+      backgroundColor: colors.surface,
+      alignItems: "center",
+    },
+    backButtonText: {
+      fontSize: 16,
+      fontWeight: "700",
+      color: colors.primary,
+    },
+    notFound: {
+      flex: 1,
+      justifyContent: "center",
+      alignContent: "center",
+      padding: Spacing.four,
+    },
+    notFoundText: {
+      fontSize: Spacing.three,
+      color: colors.textSecondary,
+    },
+    favoriteButton: {
+      position: "absolute",
+      top: 14,
+      right: 14,
+      width: 40,
+      height: 40,
+      borderRadius: Spacing.four,
+      backgroundColor: "rgba(255,255,255,0.9)",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    favoriteIcon: {
+      fontSize: 20,
+    },
+    adoptButton: {
+      flex: 2,
+      paddingVertical: 14,
+      borderRadius: 14,
+      backgroundColor: colors.primary,
+      alignItems: "center",
+    },
+    adoptButtonText: {
+      fontSize: 16,
+      fontWeight: "700",
+      color: colors.onPrimary,
+    },
+    actions: {
+      flexDirection: "row",
+      gap: Spacing.two,
+      marginTop: Spacing.four,
+    },
+  });
+}

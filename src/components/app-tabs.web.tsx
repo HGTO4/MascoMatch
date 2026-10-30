@@ -6,12 +6,12 @@ import {
   TabTrigger,
   TabTriggerSlotProps,
 } from "expo-router/ui";
-import { Pressable, StyleSheet, useColorScheme, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 
 import { ThemedText } from "./themed-text";
 import { ThemedView } from "./themed-view";
 
-import { Colors, Spacing } from "@/constants/theme";
+import { Spacing } from "@/constants/theme";
 
 export default function AppTabs() {
   return (
@@ -27,6 +27,10 @@ export default function AppTabs() {
           <TabTrigger name="favorites" href="/favorites" asChild>
             <TabButton>Favoritos</TabButton>
           </TabTrigger>
+
+          <TabTrigger name="profile" href="/profile" asChild>
+            <TabButton>Perfil</TabButton>
+          </TabTrigger>
         </CustomTabList>
       </TabList>
     </Tabs>
@@ -41,7 +45,7 @@ export function TabButton({
   return (
     <Pressable {...props} style={({ pressed }) => pressed && styles.pressed}>
       <ThemedView
-        type={isFocused ? "backgroundSelected" : "backgroundElement"}
+        type={isFocused ? "selected" : "surface"}
         style={styles.tabButtonView}
       >
         <ThemedText
@@ -56,12 +60,9 @@ export function TabButton({
 }
 
 export function CustomTabList(props: TabListProps) {
-  const scheme = useColorScheme();
-  const colors = Colors[scheme === "unspecified" ? "light" : scheme];
-
   return (
     <View {...props} style={styles.tabListContainer}>
-      <ThemedView type="backgroundElement" style={styles.innerContainer}>
+      <ThemedView type="surface" style={styles.innerContainer}>
         {props.children}
       </ThemedView>
     </View>

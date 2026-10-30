@@ -34,7 +34,13 @@
         }
       ],
       "expo-image",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "MascoMatch necesita acceder a la cámara para fotografiar mascotas."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

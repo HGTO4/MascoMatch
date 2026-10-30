@@ -1,6 +1,7 @@
 import { Tag } from "@/components/tag";
-import { AppColors, Spacing } from "@/constants/theme";
+import { AppPalette, Spacing } from "@/constants/theme";
 import { Pet } from "@/data/pets";
+import { useAppColors } from "@/hooks/use-app-colors";
 import { useFavoritesStore } from "@/store/favorites-store";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -10,6 +11,8 @@ interface PetCardProps {
 }
 
 export function PetCard({ pet, onPress }: PetCardProps) {
+  const colors = useAppColors();
+  const styles = createStyles(colors);
   const isFav = useFavoritesStore((state) =>
     state.favoriteIds.includes(pet.id),
   );
@@ -54,7 +57,7 @@ export function PetCard({ pet, onPress }: PetCardProps) {
 
           <View style={styles.tagsRow}>
             <Tag label={pet.age} />
-            <Tag label={pet.size} color={AppColors.primary} />
+            <Tag label={pet.size} color={colors.primary} />
           </View>
 
           <Text style={styles.description} numberOfLines={2}>
@@ -66,80 +69,82 @@ export function PetCard({ pet, onPress }: PetCardProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  cardShadow: {
-    marginBottom: 18,
-    borderRadius: 22,
-    boxShadow: "0px 5px 14px rgba(31, 41, 55, 0.08)",
-    elevation: 3,
-  },
-  card: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 22,
-    overflow: "hidden",
-  },
-  imageContainer: {
-    position: "relative",
-    backgroundColor: "#E9EEF3",
-  },
-  image: {
-    width: "100%",
-    height: 280,
-  },
-  typeBadge: {
-    position: "absolute",
-    bottom: 14,
-    left: 14,
+function createStyles(colors: AppPalette) {
+  return StyleSheet.create({
+    cardShadow: {
+      marginBottom: 18,
+      borderRadius: 22,
+      boxShadow: "0px 5px 14px rgba(31, 41, 55, 0.08)",
+      elevation: 3,
+    },
+    card: {
+      backgroundColor: colors.surface,
+      borderRadius: 22,
+      overflow: "hidden",
+    },
+    imageContainer: {
+      position: "relative",
+      backgroundColor: colors.surfaceMuted,
+    },
+    image: {
+      width: "100%",
+      height: 280,
+    },
+    typeBadge: {
+      position: "absolute",
+      bottom: 14,
+      left: 14,
 
-    paddingHorizontal: 22,
-    paddingVertical: 7,
+      paddingHorizontal: 22,
+      paddingVertical: 7,
 
-    borderRadius: 999,
+      borderRadius: 999,
 
-    backgroundColor: "rgba(31, 41, 55, 0.82)",
-  },
-  typeBadgeText: {
-    color: "#FFFFFF",
-    fontSize: 12,
-    fontWeight: "700",
-  },
-  info: {
-    padding: 18,
-  },
-  name: {
-    fontSize: 23,
-    lineHeight: 28,
-    fontWeight: "800",
-    color: AppColors.textSecondary,
-  },
-  subtitle: {
-    marginTop: 3,
-    fontSize: 13,
-    lineHeight: 18,
-    color: AppColors.textSecondary,
-  },
-  tagsRow: {
-    flexDirection: "row",
-    marginTop: 13,
-  },
-  description: {
-    marginTop: 12,
-    fontSize: 14,
-    lineHeight: 21,
-    color: AppColors.textSecondary,
-  },
-  favoriteButton: {
-    position: "absolute",
-    top: 14,
-    right: 14,
-    width: 40,
-    height: 40,
-    borderRadius: Spacing.four,
-    backgroundColor: "rgba(255,255,255,0.9)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  favoriteIcon: {
-    fontSize: 20,
-  },
-});
+      backgroundColor: "rgba(31, 41, 55, 0.82)",
+    },
+    typeBadgeText: {
+      color: colors.onPrimary,
+      fontSize: 12,
+      fontWeight: "700",
+    },
+    info: {
+      padding: 18,
+    },
+    name: {
+      fontSize: 23,
+      lineHeight: 28,
+      fontWeight: "800",
+      color: colors.text,
+    },
+    subtitle: {
+      marginTop: 3,
+      fontSize: 13,
+      lineHeight: 18,
+      color: colors.textSecondary,
+    },
+    tagsRow: {
+      flexDirection: "row",
+      marginTop: 13,
+    },
+    description: {
+      marginTop: 12,
+      fontSize: 14,
+      lineHeight: 21,
+      color: colors.textSecondary,
+    },
+    favoriteButton: {
+      position: "absolute",
+      top: 14,
+      right: 14,
+      width: 40,
+      height: 40,
+      borderRadius: Spacing.four,
+      backgroundColor: "rgba(255,255,255,0.9)",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    favoriteIcon: {
+      fontSize: 20,
+    },
+  });
+}

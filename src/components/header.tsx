@@ -1,4 +1,5 @@
-import { AppColors, Spacing } from "@/constants/theme";
+import { AppPalette, Spacing } from "@/constants/theme";
+import { useAppColors } from "@/hooks/use-app-colors";
 import { useLayout } from "@/hooks/use-layout";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -8,6 +9,8 @@ interface HeaderProps {
 }
 
 export function Header({ title, subtitle }: HeaderProps) {
+  const colors = useAppColors();
+  const styles = createStyles(colors);
   const { margenX } = useLayout();
 
   return (
@@ -28,53 +31,55 @@ export function Header({ title, subtitle }: HeaderProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: AppColors.primary,
-    borderBottomLeftRadius: Spacing.four,
-    borderBottomRightRadius: Spacing.four,
-    overflow: "hidden",
-  },
-  content: {
-    width: "100%",
-    paddingTop: Spacing.seven,
-    paddingBottom: 28,
-  },
+function createStyles(colors: AppPalette) {
+  return StyleSheet.create({
+    container: {
+      backgroundColor: colors.primary,
+      borderBottomLeftRadius: Spacing.four,
+      borderBottomRightRadius: Spacing.four,
+      overflow: "hidden",
+    },
+    content: {
+      width: "100%",
+      paddingTop: Spacing.seven,
+      paddingBottom: 28,
+    },
 
-  brandRow: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
+    brandRow: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
 
-  logo: {
-    width: 48,
-    height: 48,
-    borderRadius: 16,
-    backgroundColor: "rgba(255,255,255,0.18)",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 14,
-  },
+    logo: {
+      width: 48,
+      height: 48,
+      borderRadius: 16,
+      backgroundColor: "rgba(255,255,255,0.18)",
+      justifyContent: "center",
+      alignItems: "center",
+      marginRight: 14,
+    },
 
-  logoText: {
-    fontSize: 24,
-  },
+    logoText: {
+      fontSize: 24,
+    },
 
-  brandTextContainer: {
-    flex: 1,
-  },
+    brandTextContainer: {
+      flex: 1,
+    },
 
-  title: {
-    fontSize: 26,
-    lineHeight: 32,
-    fontWeight: "700",
-    color: "#FFFFFF",
-    letterSpacing: -0.5,
-  },
-  subtitle: {
-    marginTop: 3,
-    fontSize: 14,
-    fontWeight: "500",
-    color: "rgba(255,255,255,0.82)",
-  },
-});
+    title: {
+      fontSize: 26,
+      lineHeight: 32,
+      fontWeight: "700",
+      color: "#FFFFFF",
+      letterSpacing: -0.5,
+    },
+    subtitle: {
+      marginTop: 3,
+      fontSize: 14,
+      fontWeight: "500",
+      color: "rgba(255,255,255,0.82)",
+    },
+  });
+}

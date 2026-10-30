@@ -10,6 +10,7 @@ export interface Pet {
   location: string;
   description: string;
   image: string;
+  ownerEmail?: string;
 }
 
 export const pets: Pet[] = [

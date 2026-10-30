@@ -7,43 +7,60 @@ import "@/global.css";
 
 import { Platform } from "react-native";
 
-export const Colors = {
-  light: {
-    text: "#1F2937",
-    background: "#F6F8FB",
-    backgroundElement: "#FFFFFF",
-    backgroundSelected: "#E8F2FC",
-    textSecondary: "#6B7280",
-  },
-  dark: {
-    text: "#F9FAFB",
-    background: "#111827",
-    backgroundElement: "#1F2937",
-    backgroundSelected: "#26384A",
-    textSecondary: "#9CA3AF",
-  },
-} as const;
+export interface AppPalette {
+  primary: string;
+  primaryDark: string;
+  secondary: string;
+  accent: string;
+  background: string;
+  surface: string;
+  surfaceMuted: string;
+  text: string;
+  textSecondary: string;
+  textMuted: string;
+  border: string;
+  favorite: string;
+  onPrimary: string;
+  selected: string;
+}
 
-export const AppColors = {
+const lightPalette: AppPalette = {
   primary: "#4A9FE0",
   primaryDark: "#347FBC",
-
   secondary: "#73C991",
   accent: "#FF946B",
-
   background: "#F6F8FB",
   surface: "#FFFFFF",
-
+  surfaceMuted: "#E9EEF3",
   text: "#1F2937",
   textSecondary: "#6B7280",
   textMuted: "#9CA3AF",
-
   border: "#E8EDF2",
-
   favorite: "#FF6B6B",
-} as const;
+  onPrimary: "#FFFFFF",
+  selected: "#E8F2FC",
+};
 
-export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
+const darkPalette: AppPalette = {
+  primary: "#4A9FE0",
+  primaryDark: "#7DBBF0",
+  secondary: "#73C991",
+  accent: "#FF946B",
+  background: "#111827",
+  surface: "#1F2937",
+  surfaceMuted: "#374151",
+  text: "#F9FAFB",
+  textSecondary: "#9CA3AF",
+  textMuted: "#6B7280",
+  border: "#374151",
+  favorite: "#FF6B6B",
+  onPrimary: "#FFFFFF",
+  selected: "#26384A",
+};
+
+export const AppPalettes = { light: lightPalette, dark: darkPalette };
+
+export type ThemeColor = keyof AppPalette;
 
 export const Fonts = Platform.select({
   ios: {

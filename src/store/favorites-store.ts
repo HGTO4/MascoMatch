@@ -3,10 +3,9 @@ import { create } from "zustand";
 interface FavoriteStore {
   favoriteIds: string[];
   toggleFavorite: (id: string) => void;
-  isFavorite: (id: string) => boolean;
 }
 
-export const useFavoritesStore = create<FavoriteStore>((set, get) => ({
+export const useFavoritesStore = create<FavoriteStore>((set) => ({
   favoriteIds: [],
 
   toggleFavorite: (id) =>
@@ -18,6 +17,4 @@ export const useFavoritesStore = create<FavoriteStore>((set, get) => ({
           : [...state.favoriteIds, id],
       };
     }),
-
-  isFavorite: (id) => get().favoriteIds.includes(id),
 }));

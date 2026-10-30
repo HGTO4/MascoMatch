@@ -1,4 +1,4 @@
-import { AppColors } from "@/constants/theme";
+import { useAppColors } from "@/hooks/use-app-colors";
 import { StyleSheet, Text, View } from "react-native";
 
 interface TagProps {
@@ -6,11 +6,13 @@ interface TagProps {
   color?: string;
 }
 
-export function Tag({ label, color = AppColors.accent }: TagProps) {
+export function Tag({ label, color }: TagProps) {
+  const colors = useAppColors();
+  const tagColor = color ?? colors.accent;
   return (
-    <View style={[styles.tag, { backgroundColor: `${color}22` }]}>
-      <View style={[styles.dot, { backgroundColor: color }]} />
-      <Text style={[styles.tagText, { color: color }]}>{label}</Text>
+    <View style={[styles.tag, { backgroundColor: `${tagColor}22` }]}>
+      <View style={[styles.dot, { backgroundColor: tagColor }]} />
+      <Text style={[styles.tagText, { color: tagColor }]}>{label}</Text>
     </View>
   );
 }
